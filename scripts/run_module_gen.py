@@ -24,42 +24,69 @@ DEFAULT_MODEL = "qwen3:1.7b"  # override with --model for better quality
 
 client = AsyncOpenAI(base_url=f"{OLLAMA_HOST}/v1", api_key="ollama")
 
-SYSTEM_PROMPT = """You are an expert mathematics educator and textbook author.
-You write clear, accurate, pedagogically sound mathematics content.
-You always use LaTeX notation for formulas ($...$ inline, $$...$$ block).
-You write in Japanese with English mathematical terms in parentheses.
-You never copy text directly from existing textbooks — all content is original.
-You always include the full YAML frontmatter as specified."""
+SYSTEM_PROMPT = """あなたは数学の専門家であり、教科書の著者です。
+必ず日本語で記述してください。英語での回答は禁止です。
+数式は必ず LaTeX 記法を使用してください（インライン: $...$、ブロック: $$...$$）。
+数学用語は日本語を主とし、英語を括弧書きで併記してください（例: 判別式 (discriminant)）。
+既存教科書の文章を直接コピーしてはいけません。すべてオリジナルの文章で書いてください。
+YAML frontmatter は必ず --- 区切りで始め、指定されたフィールドをすべて含めてください。
+コードブロック（```yaml）で frontmatter を囲んではいけません。"""
 
 
 def build_task(module_id: str, title: str, objective: str, concepts: list[str]) -> str:
     concepts_str = "\n".join(f"- {c}" for c in concepts) if concepts else "（スキーマ参照）"
-    return f"""以下のスキーマに従って、高校数学モジュールの完全な初稿を生成してください。
+    return f"""以下の仕様に従い、高校数学モジュールの完全な初稿を日本語で生成してください。
+英語での回答は禁止です。必ず日本語で書いてください。
 
-MODULE_ID: {module_id}
-TITLE: {title}
-LEVEL: 高校数学（国際標準）
-OBJECTIVE: {objective}
-CORE_CONCEPTS:
+【出力形式】
+ファイルの先頭は必ず以下の形式の YAML frontmatter で始めること（---区切り、コードブロック禁止）:
+
+---
+module_id: {module_id}
+title: "{title}"
+subject: mathematics
+domain: functions
+level: high-school
+learning_objective: >
+  （ここに学習目標を日本語で記述）
+prerequisites:
+  - HS-FUNC-001
+core_concepts:
+  - （コアコンセプトを列挙）
+key_terms:
+  - （用語を「日本語 (英語)」形式で列挙）
+common_misunderstandings:
+  - （よくある誤解を列挙）
+source_references:
+  - title: "OpenStax Algebra and Trigonometry"
+    url: "https://openstax.org/books/algebra-and-trigonometry/pages/1-introduction-to-prerequisites"
+    license: "CC BY 4.0"
+license: "CC BY 4.0"
+status: draft
+---
+
+【MODULE_ID】: {module_id}
+【タイトル】: {title}
+【学習目標】: {objective}
+【コアコンセプト】:
 {concepts_str}
 
-要件:
-1. MODULE_SCHEMA.md に定義された YAML frontmatter を含む完全なファイルを生成する
-2. 数式は LaTeX 記法 ($..$ / $$..$$) を使用する
-3. 例題は最低2問（基礎1問・応用1問）、解答付き
-4. 練習問題は最低3問、答え付き
-5. よくある間違い（common_misunderstandings）を2点以上記載する
-6. 参照元は OpenStax または CK-12 の該当セクションを仮定して記載する
-7. 著作権クリーンな独自文章のみ（既存教科書のコピー禁止）
-8. 日本語で記述し、数学用語は英語も括弧書きで併記する
-9. curriculum_coverage に日本・UK・IB・シンガポール・米国の対応を記載する"""
+【本文の必須セクション（日本語で記述）】:
+1. 学習目標（箇条書き）
+2. 概念説明（定義・性質・直感的説明）
+3. 例題 最低2問（基礎1問・応用1問、解答付き）
+4. よくある間違い 2点以上
+5. 練習問題 最低3問（解答付き）
+6. 次のステップ
+
+数式は必ず LaTeX 記法で書くこと。数学用語は「日本語 (英語)」形式で併記。"""
 
 
 async def run(model: str, module_id: str, title: str, objective: str, concepts: list[str]):
     PROPOSALS.mkdir(parents=True, exist_ok=True)
 
     task = build_task(module_id, title, objective, concepts)
-    print(f"\n[{model}] Generating module: {module_id} — {title}")
+    print(f"\n[{model}] Generating module: {module_id} / {title}")
     t0 = time.time()
 
     try:
