@@ -1,70 +1,68 @@
 # textbook_modules
 
-**A free, open-source, modular mathematics textbook — built collaboratively from the world's best open educational resources.**
+A free, open-licensed, modular library of mathematics content — built from the world's best open educational resources.
+
+Every module is a self-contained Markdown file covering one concept: what it is, why it matters, worked examples, and practice problems. The format is designed so that humans and AI systems can read, reference, and build on it equally well.
 
 ---
 
-## What is this?
+## Why this exists
 
-This project collects open-licensed curriculum materials from around the world and assembles them into a single, structured, modular textbook hosted on GitHub.
-
-Every module is self-contained: it covers one concept, has clear learning objectives, worked examples, practice problems, and citations to its sources. All content is CC BY 4.0 or CC0 — free to use, remix, and redistribute.
-
-Current focus: **High School Mathematics (日本の高校数学相当)**
+When someone asks an AI to help them learn mathematics, the AI draws on whatever it was trained on — which may be incomplete, inconsistent, or locked behind copyright. This library aims to be a clean, citable, openly-licensed reference that anyone (or any AI) can use freely.
 
 ---
 
-## Module Status
+## Coverage
 
-| module_id    | タイトル                        | ステータス   |
-|--------------|---------------------------------|--------------|
-| HS-FUNC-002  | 二次関数                        | in review    |
-| HS-ALG-001   | 多項式の展開と因数分解          | planned      |
-| HS-FUNC-001  | 関数の概念・定義域・値域        | planned      |
-| HS-TRIG-001  | 三角関数の定義                  | planned      |
-| HS-CALC-001  | 微分の基礎・導関数              | planned      |
+**Current: High School Mathematics**
 
-Full module plan → [`MODULE_QUEUE.md`](MODULE_QUEUE.md)
+| Module ID | Topic | Status |
+|---|---|---|
+| HS-FUNC-001 | 関数の概念・定義域・値域 | planned |
+| HS-FUNC-002 | 二次関数 | in progress |
+| HS-ALG-001 | 多項式の展開と因数分解 | planned |
+| HS-TRIG-001 | 三角関数の定義 | planned |
+| HS-CALC-001 | 微分の基礎・導関数 | planned |
+
+Elementary and middle school mathematics will follow.
 
 ---
 
-## Repository Structure
+## Module format
 
+Each module is a single Markdown file with YAML frontmatter.
+
+```yaml
+---
+module_id: HS-FUNC-002
+title: 二次関数
+subject: mathematics
+level: high-school
+learning_objective: "..."
+prerequisites: [HS-FUNC-001]
+license: CC BY 4.0
+source_references: [...]
+---
 ```
-textbook-modules/
-  high-school-math/
-    MODULE_SCHEMA.md          ← module format definition
-    modules/final/            ← published modules (CC BY 4.0)
-    modules/drafts/           ← work in progress
-    modules/reviews/          ← review notes
-    curriculum-analysis/      ← source curriculum comparisons
-roles/                        ← agent role definitions (Researcher, Editor, etc.)
-sources/                      ← source registries per module
-MODULE_QUEUE.md               ← planned modules with priority
-SOURCE_REGISTRY.md            ← all adopted sources with license info
-CONTRIBUTING.md               ← how to contribute
-```
+
+Full schema: [`high-school-math/MODULE_SCHEMA.md`](high-school-math/MODULE_SCHEMA.md)
 
 ---
 
-## How It's Made
+## Sources
 
-Modules are generated and reviewed by a multi-role pipeline:
+All content is drawn from openly-licensed curriculum documents and textbooks (CC BY, CC BY-SA, or CC0). Source details are recorded in each module's frontmatter.
 
-**Researcher → Editor → Professor → Critical Thinker → Editor-in-Chief → PM**
-
-Each role is defined as a plain Markdown file in `roles/`. The pipeline runs locally using [Ollama](https://ollama.com/) with open-weight models. Claude provides an external audit layer.
+Curriculum reference used for scope and sequencing: [`high-school-math/CURRICULUM_COMPARISON.md`](high-school-math/CURRICULUM_COMPARISON.md) — a comparison of high school mathematics curricula from 10 countries and the IB.
 
 ---
 
 ## License
 
-All module content in `modules/final/` is released under **CC BY 4.0** unless otherwise noted in the module's frontmatter.
-
-Source code in `scripts/` is MIT licensed.
+All module content is **CC BY 4.0** unless otherwise noted in the module's frontmatter. You are free to use, share, and adapt with attribution.
 
 ---
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md). All contributions are welcome — reviews, new problems, translations, and new modules.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). Contributions of any kind are welcome: corrections, new problems, translations, new modules, or better source references.

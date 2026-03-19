@@ -1,5 +1,28 @@
-scripts/.env
+# Internal workflow — not part of the published content
+roles/
+claude/
+scripts/
+pm/
+sources/
+modules/drafts/
+modules/reviews/
+textbook-modules/
+
+SYSTEM_STATE.md
+TASK_QUEUE.md
+MODULE_QUEUE.md
+RUN_LOG.md
+HOLD_QUEUE.md
+ERROR_LOG.md
+SOURCE_REGISTRY.md
+AGENT_TEAM.md
+PROJECT_OVERVIEW.md
+_copy_files.py
+
+# Python
 __pycache__/
 *.pyc
+
+# OS
 .DS_Store
 Thumbs.db
