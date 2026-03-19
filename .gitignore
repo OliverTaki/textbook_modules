@@ -4,10 +4,10 @@ claude/
 scripts/
 pm/
 sources/
-modules/drafts/
-modules/reviews/
+high-school-math/
 textbook-modules/
 
+# Internal state files
 SYSTEM_STATE.md
 TASK_QUEUE.md
 MODULE_QUEUE.md
@@ -17,7 +17,9 @@ ERROR_LOG.md
 SOURCE_REGISTRY.md
 AGENT_TEAM.md
 PROJECT_OVERVIEW.md
-_copy_files.py
+
+# Temporary scripts
+_*.py
 
 # Python
 __pycache__/
