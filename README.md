@@ -47,6 +47,8 @@ Inside each module, the data hierarchy is:
 | 7 | Cultural notes | Country/framing variations |
 | 8 | Wiki notes | Supplementary structured information |
 
+**Modules are primary. All other data is secondary.**
+
 ---
 
 ## Concept domains
@@ -59,6 +61,7 @@ Inside each module, the data hierarchy is:
 | `CALC` | Calculus |
 | `STAT` | Statistics & Probability |
 | `GEO` | Geometry |
+| `VEC` | Vectors |
 | `LOGIC` | Logic & Proof |
 
 Modules are identified by concept domain only — no grade level, no country encoding.
@@ -69,11 +72,16 @@ Modules are identified by concept domain only — no grade level, no country enc
 
 | Module ID | Concept | Status |
 |---|---|---|
-| FUNC-002 | 二次関数 | in progress |
-| ALG-001 | 多項式の展開と因数分解 | planned |
+| FUNC-002 | 二次関数 | reviewed |
+| ALG-001 | 多項式の展開と因数分解 | in progress |
 | FUNC-001 | 関数の概念・定義域・値域 | planned |
 | TRIG-001 | 三角関数の定義 | planned |
 | CALC-001 | 微分の基礎・導関数 | planned |
+| ALG-002 | 方程式と不等式 | planned |
+| GEO-001 | 平面図形の基礎・合同と相似 | planned |
+| CALC-002 | 積分の基礎・面積計算 | planned |
+| VEC-001 | ベクトルの基礎・演算 | planned |
+| STAT-001 | 確率の基礎・事象と確率 | planned |
 
 ---
 
