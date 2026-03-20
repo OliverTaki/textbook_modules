@@ -1,29 +1,57 @@
 # textbook_modules
 
-A free, open-licensed library of mathematics modules — organized by concept, not by country or grade level.
+A database of modularized teaching content — organized by concept, openly licensed, built to be reused.
 
 ---
 
 ## What this is
 
-Each module covers one mathematical concept: what it is, why it matters, worked examples, and practice problems. Modules are written in Markdown with structured YAML frontmatter so they are easy to read, search, link, and reference — by humans and AI systems alike.
+A structured collection of actual teaching material, broken into self-contained modules.
 
-The goal is a clean map of mathematics that anyone can navigate freely, without the constraints of any particular country's curriculum or school structure.
+Each module contains real instructional content: explanation, worked examples, practice problems, scoring notes, and problem-generation rules. The goal is a database that can support problem generation, assessment, curriculum mapping, and cultural comparison — but those are downstream uses. The current task is building the content database itself.
 
 ---
 
-## Structure
+## What a module is
+
+A module is a modularized piece of actual teaching material.
+
+It is not:
+- a concept label
+- an empty knowledge node
+- a metadata stub with thin content
+
+It is a complete unit of instruction covering one concept, with enough content to teach from directly.
+
+---
+
+## Data structure
 
 ```
 math/
-  modules/        ← published modules, one concept per file
-  references/     ← source curriculum documents used for scope and content
+  modules/        ← published modules (primary content)
+  references/     ← source curriculum documents
   MODULE_SCHEMA.md
 ```
 
-Modules are identified by concept domain, not by grade or country:
+Inside each module, the data hierarchy is:
 
-| Domain prefix | Covers |
+| Priority | Data | Description |
+|---|---|---|
+| 1 | Teaching content | The module body — explanation, examples |
+| 2 | Source references | Where the content comes from |
+| 3 | Practice problems | Stored problem items with answers |
+| 4 | Problem gen rules | How to generate new problems |
+| 5 | Scoring rules | How answers are evaluated |
+| 6 | Module links | Prerequisites and next modules |
+| 7 | Cultural notes | Country/framing variations |
+| 8 | Wiki notes | Supplementary structured information |
+
+---
+
+## Concept domains
+
+| Prefix | Domain |
 |---|---|
 | `FUNC` | Functions |
 | `ALG` | Algebra |
@@ -33,13 +61,15 @@ Modules are identified by concept domain, not by grade or country:
 | `GEO` | Geometry |
 | `LOGIC` | Logic & Proof |
 
+Modules are identified by concept domain only — no grade level, no country encoding.
+
 ---
 
 ## Module status
 
 | Module ID | Concept | Status |
 |---|---|---|
-| FUNC-002 | 二次関数 | draft |
+| FUNC-002 | 二次関数 | in progress |
 | ALG-001 | 多項式の展開と因数分解 | planned |
 | FUNC-001 | 関数の概念・定義域・値域 | planned |
 | TRIG-001 | 三角関数の定義 | planned |
@@ -49,9 +79,7 @@ Modules are identified by concept domain, not by grade or country:
 
 ## License
 
-All module content is **CC BY 4.0** unless otherwise noted in the module's frontmatter.
-
----
+All module content is **CC BY 4.0** unless otherwise noted in the module frontmatter.
 
 ## Contributing
 

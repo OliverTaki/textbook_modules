@@ -1,72 +1,112 @@
 # Module Schema
 
-Every module is a single Markdown file with YAML frontmatter followed by body content.
+A module is a **modularized piece of actual teaching material**.  
+It is not a concept label, not an empty knowledge node, not a policy document.  
+The body is the primary object. All other fields are supporting data.
 
 ---
 
-## YAML Frontmatter
+## YAML Frontmatter (supporting metadata)
 
 ```yaml
 ---
 module_id: FUNC-002
 title: 二次関数
-subject: mathematics
-domain: functions          # algebra / functions / geometry / trigonometry / calculus / statistics / logic
-concept_tags: [quadratic, parabola, vertex]
-learning_objective: "放物線の性質を理解し、二次関数のグラフを描き、最大・最小問題を解くことができる。"
+domain: functions
+concept_tags: [quadratic, parabola, vertex, standard-form]
 prerequisites: [FUNC-001]
 next_modules: [FUNC-003, CALC-001]
-core_concepts: [放物線, 頂点形式, 標準形, 判別式]
-key_terms:
-  - term: 頂点
-    definition: "放物線の最高点または最低点"
-common_misunderstandings:
-  - "x^2 の係数の符号と開口方向の混同"
 source_references:
   - id: SRC-001
-    title: "学習指導要領 高等学校数学"
+    title: "学習指導要領 高等学校数学II"
     url: "https://www.mext.go.jp/..."
     license: "CC BY"
 license: CC BY 4.0
-status: draft           # draft / reviewed / published
+status: draft        # draft | reviewed | published
 ---
 ```
 
-### Field notes
-
-- `module_id` — domain prefix + number, no grade or country encoding (e.g. `FUNC-002`, not `HS-JP-FUNC-002`)
-- `domain` — concept-based grouping, not curriculum-based
-- `concept_tags` — free tags for cross-linking and AI retrieval
-- `source_references` — only openly-licensed sources (CC BY, CC BY-SA, CC0)
-- `status` — `draft` until reviewed; `published` once merged to main
+**Field notes:**
+- `module_id` — domain prefix + number only. No grade level, no country code.
+- `domain` — concept domain: `functions` / `algebra` / `geometry` / `trigonometry` / `calculus` / `statistics` / `logic`
+- `prerequisites` / `next_modules` — module-to-module links. IDs only.
+- `source_references` — openly licensed sources only (CC BY, CC BY-SA, CC0)
 
 ---
 
-## Body structure
+## Body Structure (primary content)
+
+The body is the teaching content. It must be substantive, not thin.
 
 ```markdown
-## 学習目標
-
 ## 概念説明
+
+[The actual instructional content. Clear, complete explanation of the concept.
+This is the core of the module — do not make it a summary or stub.]
 
 ## 例題
 
 ### 例題 1
-### 例題 2
+[Full worked example with all steps shown]
 
-## よくある間違い
+### 例題 2
+[Second worked example, different angle or difficulty]
 
 ## 練習問題
 
-## 次のステップ
+### 問題 1
+[Problem statement]
+
+**解答:** [Full answer]
+**採点基準:** [What a correct answer must contain]
+
+### 問題 2
+...
+
+### 問題 3
+...
+
+## 問題生成ルール
+
+[Rules for generating new problems of this type.
+e.g. "Vary the value of a, h, k in y=a(x-h)²+k. Ensure a≠0.
+For max/min problems, use a<0 or a>0 explicitly."]
+
+## 各国・文化的差異
+
+[How this concept is framed differently across countries/curricula, if relevant.
+e.g. "US: vertex form emphasized. Japan: standard form → vertex form conversion emphasized.
+IB: both required with proof."]
+
+## 補足ノート
+
+[Structured supplementary notes. Common misconceptions, historical context,
+connections to other domains, etc.]
 ```
 
 ---
 
-## Naming convention
+## Data hierarchy
+
+```
+1. Module body          ← PRIMARY (teaching content)
+2. Source references    ← where the content comes from
+3. Practice problems    ← stored problem items
+4. Problem gen rules    ← how to generate new problems
+5. Scoring rules        ← how answers are evaluated
+6. Module links         ← prerequisites / next
+7. Cultural notes       ← country/framing variations
+8. Wiki notes           ← supplementary structured info
+```
+
+**Do not invert this.** Rich metadata with thin teaching content defeats the purpose.
+
+---
+
+## File naming
 
 `{DOMAIN}-{NNN}.md`
 
 Examples: `FUNC-002.md`, `CALC-001.md`, `TRIG-003.md`
 
-No country code, no grade level, no language code in the filename.
+No country code, no grade level, no language code.
