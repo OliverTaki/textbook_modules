@@ -17,6 +17,7 @@ OLLAMA_HOST = "http://localhost:11434"
 
 MODELS = {
     "Researcher":       "qwen3.5:9b",
+    "Librarian":        "qwen3.5:9b",
     "Editor":           "qwen3.5:9b",
     "Professor":        "qwen3.5:9b",
     "Critical Thinker": "qwen3.5:9b",
