@@ -379,19 +379,66 @@ async def role_editor_in_chief(task):
 
     system = rfile(BASE / "roles" / "ROLE_EDITOR_IN_CHIEF.md")
     result = None
-    for attempt in range(3):
-        raw = await qwen("Editor-in-Chief", system, prompt)
+    critique = ""   # 前回の自己評価フィードバック
+
+    for attempt in range(4):   # 最大4回（初回 + 3回の自己修正）
+        attempt_prompt = prompt
+        if critique:
+            attempt_prompt += (
+                f"\n\n## 【自己修正指示 — 試行{attempt}/{3}回目】\n"
+                f"前回の出力に以下の問題があった。必ず修正して再生成せよ:\n{critique}"
+            )
+
+        raw = await qwen("Editor-in-Chief", system, attempt_prompt)
         raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
+
+        issues = []
+
+        # ── チェック1: 外国語 ──────────────────────────────────
         violations = detect_foreign_language(raw)
         if violations:
-            if attempt < 2:
-                log(task["task_id"], "Editor-in-Chief", f"retry {attempt+1}/3 — foreign language: {violations[:3]}")
-                continue
-            # On final attempt: log and write anyway, but flag it
+            issues.append(f"外国語混入: {violations[:3]}")
+
+        # ── チェック2: YAMLラッパー ────────────────────────────
+        if "```yaml" in raw:
+            issues.append("frontmatterが```yaml```で囲まれている。raw ---で囲み直せ。")
+
+        # ── チェック3: 薄すぎる ────────────────────────────────
+        if len(raw) < 4500:
+            issues.append(f"内容が薄すぎる({len(raw)}字)。概念説明・例題・練習問題を充実させよ。最低4500字。")
+
+        # ── チェック4: 必須セクション欠落 ─────────────────────
+        missing_sections = []
+        for sec in ["概念説明", "例題", "練習問題"]:
+            if sec not in raw:
+                missing_sections.append(sec)
+        if missing_sections:
+            issues.append(f"必須セクション欠落: {missing_sections}")
+
+        # ── チェック5: EiC 自身の差し戻し判定 ──────────────────
+        # EiC が "SEND_BACK_TO_EDITOR" と出力したら Editor に差し戻す
+        if "SEND_BACK_TO_EDITOR" in raw:
+            reason = re.search(r"SEND_BACK_TO_EDITOR[:\s]+(.*)", raw)
+            reason_str = reason.group(1)[:200] if reason else "EiCが内容不十分と判断"
+            log(task["task_id"], "Editor-in-Chief", f"差し戻し → Editor: {reason_str}")
+            return "SENDBACK_EDITOR", reason_str
+
+        if not issues:
+            result = raw
+            if attempt > 0:
+                log(task["task_id"], "Editor-in-Chief", f"自己修正 {attempt}回で合格")
+            break
+
+        # 不合格 → 自己批評を蓄積して再試行
+        critique = "\n".join(f"- {i}" for i in issues)
+        log(task["task_id"], "Editor-in-Chief",
+            f"自己評価: 不合格（試行{attempt+1}/4）— {issues}")
+        if attempt == 3:
+            # 4回試みても合格しない → そのまま書いて ERROR_LOG に記録
+            result = raw
             errlog(task["task_id"], "Editor-in-Chief",
-                   f"Foreign language persists after 3 attempts: {violations[:5]}")
-        result = raw
-        break
+                   f"4回試行後も品質基準未達: {issues}")
+            log(task["task_id"], "Editor-in-Chief", "4回不合格 — 強制コミット・要人間確認")
 
     final = BASE / "math" / "modules" / f"{m}.md"
     wfile(final, result)
@@ -430,7 +477,41 @@ async def run_relay(task):
             elif role == "Fact Checker":
                 await role_fact_checker(task)
             elif role == "Editor-in-Chief":
-                await role_editor_in_chief(task)
+                eic_result = await role_editor_in_chief(task)
+
+                # EiC が Editor 差し戻しを要求した場合
+                if isinstance(eic_result, tuple) and eic_result[0] == "SENDBACK_EDITOR":
+                    _, reason = eic_result
+                    # Editor からやり直す（差し戻し回数を追跡）
+                    sendback_count = task.get("sendback_count", 0) + 1
+                    if sendback_count >= 3:
+                        log(tid, role, f"差し戻し上限(3回)到達 — HOLD")
+                        hold_task(tid, f"EiC差し戻し上限: {reason[:100]}")
+                        return False
+                    task["sendback_count"] = sendback_count
+                    task["start_role"] = "Editor"
+                    task["eic_feedback"] = reason
+                    log(tid, role, f"差し戻し({sendback_count}/3) → Editor: {reason[:80]}")
+                    discord.send(f"[{mid}] EiC差し戻し({sendback_count}/3): {reason[:80]}")
+                    # ループ内でリレーを Editor から再実行
+                    return await run_relay(task)
+
+                # 通常完了 — コミット前に即時品質チェック
+                final_path = BASE / "math" / "modules" / f"{mid}.md"
+                if final_path.exists():
+                    post_issues = auditor.detect_foreign_language(
+                        final_path.read_text(encoding="utf-8")
+                    )
+                    if post_issues:
+                        log(tid, role, f"コミット後品質チェック失敗: {post_issues[:3]}")
+                        errlog(tid, role, f"post-commit issues: {post_issues[:5]}")
+                        # 差し戻し回数が残っていれば EiC 再実行
+                        sendback_count = task.get("sendback_count", 0) + 1
+                        if sendback_count < 3:
+                            task["sendback_count"] = sendback_count
+                            task["start_role"] = "Editor-in-Chief"
+                            return await run_relay(task)
+
                 git_commit_module(mid, task["title"])
         except FileNotFoundError as e:
             log(tid, role, "error", str(e)); errlog(tid, role, str(e))
