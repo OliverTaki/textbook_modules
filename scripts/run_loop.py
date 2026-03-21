@@ -66,7 +66,8 @@ def log(task_id, role, status, note=""):
     entry = f"{ts()} | {task_id} | {role} | {status} | {note}\n"
     with open(BASE / "RUN_LOG.md", "a", encoding="utf-8") as f:
         f.write(entry)
-    print(entry.strip(), flush=True)
+    safe = entry.encode("cp932", errors="backslashreplace").decode("cp932")
+    print(safe.strip(), flush=True)
 
 def errlog(task_id, role, msg):
     with open(BASE / "ERROR_LOG.md", "a", encoding="utf-8") as f:
@@ -389,7 +390,18 @@ async def role_editor_in_chief(task):
                 f"前回の出力に以下の問題があった。必ず修正して再生成せよ:\n{critique}"
             )
 
-        raw = await qwen("Editor-in-Chief", system, attempt_prompt)
+        try:
+            raw = await asyncio.wait_for(
+                qwen("Editor-in-Chief", system, attempt_prompt),
+                timeout=300
+            )
+        except asyncio.TimeoutError:
+            if attempt < 3:
+                log(task["task_id"], "Editor-in-Chief", f"timeout attempt {attempt+1}/4 -- retry")
+                critique = "- 前回はタイムアウト。出力をより簡潔にまとめよ。必須セクションのみ出力せよ。"
+                continue
+            log(task["task_id"], "Editor-in-Chief", "timeout x4 -- holding")
+            return "SENDBACK_EDITOR", "EiC 4回タイムアウト"
         raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
 
         issues = []
