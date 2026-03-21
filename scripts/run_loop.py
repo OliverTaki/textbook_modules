@@ -82,14 +82,50 @@ def get_state():
     m = re.search(r"status:\s*(\w+)", rfile(BASE / "SYSTEM_STATE.md"))
     return m.group(1) if m else "idle"
 
+LEVEL_LABELS = {
+    "elementary": ("小学校", "算数"),
+    "middle":     ("中学校", "数学"),
+    "high":       ("高校",   "数学"),
+}
+GRADE_AGE = {
+    "1": "6〜7歳（小1）", "2": "7〜8歳（小2）", "3": "8〜9歳（小3）",
+    "4": "9〜10歳（小4）", "5": "10〜11歳（小5）", "6": "11〜12歳（小6）",
+    "7": "12〜13歳（中1）", "8": "13〜14歳（中2）", "9": "14〜15歳（中3）",
+    "10": "15〜16歳（高1）", "11": "16〜17歳（高2）", "12": "17〜18歳（高3）",
+}
+
+def get_module_meta(module_id):
+    """CURRICULUM_MAP から level / grade を返す"""
+    for line in rfile(BASE / "CURRICULUM_MAP.md").split("\n"):
+        if f"| {module_id} |" in line:
+            parts = [p.strip() for p in line.split("|")]
+            parts = [p for p in parts if p]
+            if len(parts) >= 3:
+                return {"level": parts[1], "grade": parts[2]}
+    return {"level": "high", "grade": "10"}
+
 def get_next_task():
     for line in rfile(BASE / "TASK_QUEUE.md").split("\n"):
         s = line.strip()
         if s.startswith("[ ]") and "|" in s:
             parts = [p.strip() for p in s.replace("[ ]", "").split("|")]
             if len(parts) >= 4:
-                return {"task_id": parts[0], "module_id": parts[1],
-                        "title": parts[2], "start_role": parts[3]}
+                mid  = parts[1]
+                meta = get_module_meta(mid)
+                level, grade = meta["level"], meta["grade"]
+                school, subject = LEVEL_LABELS.get(level, ("高校", "数学"))
+                age = GRADE_AGE.get(grade, "")
+                return {
+                    "task_id":    parts[0],
+                    "module_id":  mid,
+                    "title":      parts[2],
+                    "start_role": parts[3],
+                    "level":      level,
+                    "grade":      grade,
+                    "school":     school,
+                    "subject":    subject,
+                    "age":        age,
+                }
     return None
 
 def update_task_line(task_id, old_m, new_m):
@@ -178,6 +214,11 @@ async def role_editor(task):
     prompt = (
         f"【重要】モジュールID: {m}、タイトル:「{t}」の初稿を作成せよ。\n"
         f"module_id は必ず {m}、title は必ず「{t}」とすること。\n\n"
+        f"## 対象読者（厳守）\n"
+        f"- 学校種別: {task.get('school','高校')} {task.get('subject','数学')}\n"
+        f"- 学年・年齢: {task.get('grade','')}/{task.get('age','高校生')}\n"
+        f"- この年齢の学習者が理解できる語彙・概念のみ使用すること。\n"
+        f"- 高度すぎる概念（大学・専門レベル）は一切含めてはならない。\n\n"
         "## 出力ルール（厳守）\n"
         "- 出力はモジュール本文のみ。ソース文書・説明コメント・前置きは一切含めない。\n"
         "- 最初の行は必ず `---`（YAMLフロントマター開始）から始める。\n"
@@ -241,9 +282,13 @@ async def role_professor(task):
     # to avoid exceeding 4096 token context window
     draft_excerpt = draft[:2500]
     prompt = (
-        f"数学モジュール {m} の初稿（概念説明・例題部分）を Professor としてレビューせよ。\n\n"
+        f"数学モジュール {m}「{task['title']}」の初稿を Professor としてレビューせよ。\n"
+        f"対象: {task.get('school','高校')} {task.get('grade','')}年生（{task.get('age','高校生')}）\n\n"
         f"初稿（抜粋）:\n{draft_excerpt}\n\n"
-        "確認事項: 数式・定義・計算ステップの正確性のみ確認する。\n"
+        "確認事項:\n"
+        "1. 数式・定義・計算ステップの正確性\n"
+        "2. 【学年適切性】この年齢の学習者に不適切な高度概念が含まれていないか\n"
+        "   （例: 小1モジュールにUTC/TAI・原子時計が出てくるのはNG）\n"
         "出力形式（必須）:\n"
         "verdict: OK | NG | REQUIRE_REVISION\n"
         "issues:\n"
