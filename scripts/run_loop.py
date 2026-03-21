@@ -8,6 +8,7 @@ from pathlib import Path
 from openai import AsyncOpenAI
 sys.path.insert(0, str(Path(__file__).parent))
 import discord_notify as discord
+import audit_modules as auditor
 
 BASE = Path(r"C:\Users\punch\Desktop\KnowledgeMapProject")
 OLLAMA_HOST = "http://localhost:11434"
@@ -355,6 +356,25 @@ async def run_relay(task):
 async def main():
     print(f"[{ts()}] Qwen relay loop starting.", flush=True)
     discord.send(f"KnowledgeMap ループ起動 {ts()}")
+
+    # ── 起動時セルフ監査 ──────────────────────────────────────
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    problems = auditor.scan_modules()
+    if problems:
+        summary_lines = []
+        for mid, issues in problems.items():
+            auditor.log_to_error_log(mid, issues)
+            auditor.reset_task_to_eic(mid, today)
+            # issues に非ASCII文字が入る可能性があるため ASCII にエスケープ
+            safe_issues = [i.encode("ascii", errors="backslashreplace").decode("ascii") for i in issues]
+            summary_lines.append(f"{mid}: {', '.join(safe_issues)}")
+        msg = f"[audit] {len(problems)}件の問題を検出し再投入:\n" + "\n".join(summary_lines)
+        print(msg, flush=True)
+        discord.send(msg)
+    else:
+        print("[audit] 全モジュールパス。問題なし。", flush=True)
+    # ─────────────────────────────────────────────────────────
+
     error_streak = 0
 
     while True:
