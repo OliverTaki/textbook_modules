@@ -9,6 +9,8 @@ from openai import AsyncOpenAI
 sys.path.insert(0, str(Path(__file__).parent))
 import discord_notify as discord
 import audit_modules as auditor
+import curriculum_planner
+import web_search
 
 BASE = Path(r"C:\Users\punch\Desktop\KnowledgeMapProject")
 OLLAMA_HOST = "http://localhost:11434"
@@ -20,7 +22,7 @@ MODELS = {
     "Critical Thinker": "qwen3.5:9b",
     "Editor-in-Chief":  "qwen3.5:9b",
 }
-RELAY_ORDER = ["Researcher", "Editor", "Professor", "Critical Thinker", "Editor-in-Chief"]
+RELAY_ORDER = ["Researcher", "Librarian", "Editor", "Professor", "Critical Thinker", "Editor-in-Chief"]
 
 client = AsyncOpenAI(base_url=f"{OLLAMA_HOST}/v1", api_key="ollama")
 
@@ -139,6 +141,32 @@ async def role_researcher(task):
     )
     result = await qwen("Researcher", rfile(BASE / "roles" / "ROLE_RESEARCHER.md"), prompt)
     wfile(BASE / "sources" / f"{m}_sources.md", result)
+
+async def role_librarian(task):
+    m, t = task["module_id"], task["title"]
+    ref_dir = BASE / "references" / m
+    log(task["task_id"], "Librarian", "collecting", f"{m} {t}")
+    try:
+        index_text, sources = web_search.collect_references(m, t, ref_dir, max_pages=3)
+    except Exception as e:
+        # ネットワークエラーでも続行
+        errlog(task["task_id"], "Librarian", str(e))
+        index_text = f"# References: {m}\n収集失敗: {e}\n"
+        sources = []
+        (ref_dir / "INDEX.md").write_text(index_text, encoding="utf-8")
+
+    # Qwen で収集資料の要約を生成
+    wiki_text = rfile(ref_dir / "wikipedia.txt")[:3000] if (ref_dir / "wikipedia.txt").exists() else ""
+    prompt = (
+        f"モジュール {m}「{t}」の参照資料を以下に示す。\n\n"
+        f"## Wikipedia 抜粋:\n{wiki_text[:2000] if wiki_text else '（取得なし）'}\n\n"
+        f"## 収集資料一覧:\n{index_text}\n\n"
+        "上記資料の内容を踏まえ、このモジュールで扱う数学的概念の要点を日本語で300字以内にまとめよ。"
+        "Editor が教材を書く際の参考情報として使う。"
+    )
+    summary = await qwen("Librarian", rfile(BASE / "roles" / "ROLE_LIBRARIAN.md"), prompt)
+    wfile(ref_dir / "SUMMARY.md", summary)
+    wfile(BASE / "references" / f"{m}_summary.md", f"# {m} 資料要約\n\n{summary}\n")
 
 async def role_editor(task):
     m, t = task["module_id"], task["title"]
@@ -326,6 +354,7 @@ async def run_relay(task):
         discord.notify_start(mid, role)
         try:
             if   role == "Researcher":      await role_researcher(task)
+            elif role == "Librarian":       await role_librarian(task)
             elif role == "Editor":          await role_editor(task)
             elif role == "Professor":
                 result = await role_professor(task)
@@ -373,6 +402,11 @@ async def main():
         discord.send(msg)
     else:
         print("[audit] 全モジュールパス。問題なし。", flush=True)
+
+    # ── カリキュラム自動拡張 ──────────────────────────────────
+    added = curriculum_planner.add_missing_tasks()
+    if added:
+        discord.send(f"[curriculum] {added}件の新規モジュールを TASK_QUEUE に追加しました。")
     # ─────────────────────────────────────────────────────────
 
     error_streak = 0
