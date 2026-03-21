@@ -251,6 +251,9 @@ async def role_editor(task):
         f"【絶対厳守】日本語のみ使用。英語・中国語・タイ語・韓国語・アラビア語・その他外国語は一切禁止。\n"
         f"今すぐ {m}「{t}」の初稿を出力せよ。"
     )
+    # 差し戻しフィードバックがある場合は末尾に追加
+    if task.get("editor_feedback"):
+        prompt += f"\n\n{task['editor_feedback']}"
     system = rfile(BASE / "roles" / "ROLE_EDITOR.md")
     for attempt in range(3):
         result = await qwen("Editor", system, prompt)
@@ -523,14 +526,40 @@ async def run_relay(task):
             elif role == "Professor":
                 result = await role_professor(task)
                 if "verdict: NG" in result:
-                    log(tid, role, "NG — holding")
-                    hold_task(tid, "Professor NG"); return False
+                    retry_count = task.get("prof_retry", 0) + 1
+                    if retry_count >= 3:
+                        log(tid, role, f"NG x{retry_count} -- HOLD")
+                        hold_task(tid, f"Professor NG x{retry_count}"); return False
+                    # 自己解決: NG の理由を Editor に渡して再生成
+                    issues = result.replace("verdict: NG", "").strip()[:400]
+                    task["prof_retry"]   = retry_count
+                    task["editor_feedback"] = (
+                        f"【Professor NG 差し戻し {retry_count}/2】\n"
+                        f"以下の問題を修正して再生成せよ:\n{issues}"
+                    )
+                    task["start_role"] = "Editor"
+                    log(tid, role, f"NG -- 自己解決: Editor 差し戻し ({retry_count}/2)")
+                    discord.send(f"[{mid}] Professor NG -> Editor 差し戻し ({retry_count}/2)")
+                    return await run_relay(task)
+
             elif role == "Critical Thinker":
                 result = await role_critical_thinker(task)
                 hc = re.search(r"high_count:\s*(\d+)", result)
                 if hc and int(hc.group(1)) >= 3:
-                    log(tid, role, f"high_count={hc.group(1)} — holding")
-                    hold_task(tid, f"CT high_count={hc.group(1)}"); return False
+                    retry_count = task.get("ct_retry", 0) + 1
+                    if retry_count >= 3:
+                        log(tid, role, f"high_count={hc.group(1)} x{retry_count} -- HOLD")
+                        hold_task(tid, f"CT high_count={hc.group(1)} x{retry_count}"); return False
+                    issues = result.strip()[:400]
+                    task["ct_retry"] = retry_count
+                    task["editor_feedback"] = (
+                        f"【Critical Thinker 差し戻し {retry_count}/2】\n"
+                        f"以下の深刻な問題を修正して再生成せよ:\n{issues}"
+                    )
+                    task["start_role"] = "Editor"
+                    log(tid, role, f"CT high -- 自己解決: Editor 差し戻し ({retry_count}/2)")
+                    discord.send(f"[{mid}] CT high -> Editor 差し戻し ({retry_count}/2)")
+                    return await run_relay(task)
             elif role == "Fact Checker":
                 await role_fact_checker(task)
             elif role == "Editor-in-Chief":
