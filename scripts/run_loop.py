@@ -646,7 +646,14 @@ async def main():
             discord.send("SYSTEM_STATE=stop — 停止しました。")
             break
         if state == "hold":
-            await asyncio.sleep(300); continue
+            # pending タスクが残っていれば自動復帰
+            if get_next_task() is not None:
+                set_state("idle")
+                log("system", "hold-recovery", "pending tasks found — resuming")
+                discord.send("HOLD 自動解除 — pending タスクを検出したため再開します。")
+            else:
+                await asyncio.sleep(300)
+            continue
 
         task = get_next_task()
         if task is None:
