@@ -79,41 +79,36 @@ def add_missing_tasks():
 
     missing = [m for m in curriculum if m["module_id"] not in already_known]
 
+    def safe(s):
+        return s.encode("cp932", errors="backslashreplace").decode("cp932")
+
     if not missing:
-        print(f"[{ts()}] curriculum_planner: 新規追加なし（全{len(curriculum)}件登録済み）",
+        print(safe(f"[{ts()}] curriculum_planner: 新規追加なし（全{len(curriculum)}件登録済み）"),
               flush=True)
         return 0
 
-    # TASK_QUEUE に追記
     today  = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    queue  = rfile(BASE / "TASK_QUEUE.md")
     next_n = get_next_task_number()
-    new_lines = []
+    added  = 0
 
+    # 1件ずつ TASK_QUEUE に追記（途中クラッシュでも保存される）
     for mod in missing:
         tid   = f"TASK-{next_n:03d}"
         level_label = {"elementary": "小学校", "middle": "中学校", "high": "高校"}.get(mod["level"], mod["level"])
         line  = (
             f"[ ] {tid} | {mod['module_id']} | {mod['title']} "
-            f"| Researcher | {level_label} | {today}"
+            f"| Researcher | {level_label} | {today}\n"
         )
-        new_lines.append(line)
-        print(f"  + {tid}: {mod['module_id']} {mod['title']}", flush=True)
+        # 追記モードで1行ずつ書き込む（アトミック）
+        with open(BASE / "TASK_QUEUE.md", "a", encoding="utf-8") as f:
+            f.write(line)
+        print(safe(f"  + {tid}: {mod['module_id']} {mod['title']}"), flush=True)
         next_n += 1
+        added  += 1
 
-    # pending セクションの直後に挿入
-    if "## pending" in queue:
-        queue = queue.replace(
-            "## pending\n",
-            "## pending\n" + "\n".join(new_lines) + "\n"
-        )
-    else:
-        queue += "\n## pending\n" + "\n".join(new_lines) + "\n"
-
-    wfile(BASE / "TASK_QUEUE.md", queue)
-    print(f"[{ts()}] curriculum_planner: {len(missing)}件を TASK_QUEUE に追加しました。",
+    print(safe(f"[{ts()}] curriculum_planner: {added}件を TASK_QUEUE に追加しました。"),
           flush=True)
-    return len(missing)
+    return added
 
 # ─────────────────────────────────────────────────────────────
 def main():

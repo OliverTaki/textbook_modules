@@ -70,7 +70,7 @@
 | MID-015 | middle | 8 | 確率の基礎 | ELM-042 |
 | MID-016 | middle | 9 | 平方根・無理数 | MID-009 |
 | MID-017 | middle | 9 | 二次方程式 | MID-016 |
-| MID-018 | middle | 9 | 二次関数（y=ax²） | MID-011 |
+| MID-018 | middle | 9 | 二次関数（y=ax^2） | MID-011 |
 | MID-019 | middle | 9 | 相似な図形・相似比 | MID-014 |
 | MID-020 | middle | 9 | 三平方の定理（ピタゴラス） | MID-019 |
 | MID-021 | middle | 9 | 円の性質（円周角・接線） | MID-006 |
