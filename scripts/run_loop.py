@@ -21,9 +21,10 @@ MODELS = {
     "Editor":           "qwen3.5:9b",
     "Professor":        "qwen3.5:9b",
     "Critical Thinker": "qwen3.5:9b",
+    "Fact Checker":     "qwen3.5:9b",
     "Editor-in-Chief":  "qwen3.5:9b",
 }
-RELAY_ORDER = ["Researcher", "Librarian", "Editor", "Professor", "Critical Thinker", "Editor-in-Chief"]
+RELAY_ORDER = ["Researcher", "Librarian", "Editor", "Professor", "Critical Thinker", "Fact Checker", "Editor-in-Chief"]
 
 client = AsyncOpenAI(base_url=f"{OLLAMA_HOST}/v1", api_key="ollama")
 
@@ -287,6 +288,61 @@ async def role_critical_thinker(task):
     wfile(BASE/"modules"/"reviews"/f"{m}_ct_review.md", result)
     return result
 
+async def role_fact_checker(task):
+    m, t = task["module_id"], task["title"]
+    draft = rfile(BASE/"math"/"modules"/f"{m}_draft.md") or rfile(BASE/"modules"/"drafts"/f"{m}_draft.md")
+    draft_excerpt = draft[:2000]
+
+    # ── ウェブ検索（4クエリ）──────────────────────────────────
+    queries = [
+        f"{t} よくある誤解 つまずき",
+        f"{t} 学習指導要領 文部科学省",
+        f"{t} 指導法 教え方 注意点",
+        f"{t} 前提知識 つながり",
+    ]
+    search_results = []
+    for q in queries:
+        try:
+            results = web_search.search_ddg(q, max_results=3)
+            snippets = "\n".join(
+                f"- [{r['title']}]({r['url']}): {r['snippet']}" for r in results
+            )
+            search_results.append(f"### クエリ: {q}\n{snippets}")
+        except Exception as e:
+            search_results.append(f"### クエリ: {q}\n検索失敗: {e}")
+
+    web_evidence = "\n\n".join(search_results)
+
+    # ── Qwen で問題提起レポートを生成 ─────────────────────────
+    prompt = (
+        f"モジュール {m}「{t}」の Fact Check を実施せよ。\n\n"
+        f"## 初稿（抜粋）:\n{draft_excerpt}\n\n"
+        f"## ウェブ調査結果:\n{web_evidence}\n\n"
+        "上記の調査結果を根拠に、以下の観点で問題を**能動的に**提起せよ：\n"
+        "1. よくある誤解・つまずきポイントへの対応不足\n"
+        "2. 学習指導要領・文部科学省の方針との不整合\n"
+        "3. 教育的妥当性の問題（教え方・順序・例の適切さ）\n"
+        "4. 前提知識・前後関係の問題\n\n"
+        "出力フォーマット（必須）:\n"
+        "# Fact Check: {module_id}\n"
+        "## 調査クエリ\n- [クエリ一覧]\n"
+        "## 発見した問題・懸念点\n### [問題タイトル]\n- 根拠: [URL]\n- 内容: [指摘]\n- 重要度: HIGH/MEDIUM/LOW\n"
+        "## 問題なし確認済み項目\n- [裏付けが取れた点]\n"
+        "## EiC への推奨事項\n- [EiC が対処すべき事項]\n\n"
+        "問題が見つからない場合でも「なぜ問題なしと判断したか」を根拠付きで示せ。"
+        "日本語のみで出力せよ。"
+    )
+    try:
+        result = await asyncio.wait_for(
+            qwen("Fact Checker", rfile(BASE/"roles"/"ROLE_FACT_CHECKER.md"), prompt),
+            timeout=180
+        )
+    except asyncio.TimeoutError:
+        result = f"# Fact Check: {m}\n## 発見した問題・懸念点\n- タイムアウト。レビューをスキップ。\n## EiC への推奨事項\n- Fact Check 未完了のため、EiC が自己判断で対処すること。"
+
+    wfile(BASE/"modules"/"reviews"/f"{m}_factcheck.md", result)
+    return result
+
 async def role_editor_in_chief(task):
     """
     Editor-in-Chief: corrections-only approach.
@@ -300,14 +356,17 @@ async def role_editor_in_chief(task):
     # Load reviews — take only the corrections/verdict portion (last 1000 chars)
     prof_raw = rfile(BASE / "modules" / "reviews" / f"{m}_professor_review.md")
     ct_raw   = rfile(BASE / "modules" / "reviews" / f"{m}_ct_review.md")
+    fc_raw   = rfile(BASE / "modules" / "reviews" / f"{m}_factcheck.md")
     prof_summary = prof_raw[-1000:].strip() if prof_raw else "（Professor レビューなし）"
     ct_summary   = ct_raw[-1000:].strip()   if ct_raw   else "（CT レビューなし）"
+    fc_summary   = fc_raw[-1200:].strip()   if fc_raw   else "（Fact Check なし）"
 
     prompt = (
         f"モジュールID: {m}「{t}」の最終稿を新規作成してください。\n\n"
         f"## レビュー指摘（すべて反映必須）\n\n"
         f"### Professor レビュー（抜粋）:\n{prof_summary}\n\n"
         f"### Critical Thinker レビュー（抜粋）:\n{ct_summary}\n\n"
+        f"### Fact Checker レポート（抜粋）:\n{fc_summary}\n\n"
         f"## MODULE_SCHEMA（フォーマット仕様）:\n{schema}\n\n"
         "上記指摘を反映した完全なモジュールを出力してください。\n"
         "- YAML frontmatter の status を reviewed に\n"
@@ -368,6 +427,8 @@ async def run_relay(task):
                 if hc and int(hc.group(1)) >= 3:
                     log(tid, role, f"high_count={hc.group(1)} — holding")
                     hold_task(tid, f"CT high_count={hc.group(1)}"); return False
+            elif role == "Fact Checker":
+                await role_fact_checker(task)
             elif role == "Editor-in-Chief":
                 await role_editor_in_chief(task)
                 git_commit_module(mid, task["title"])
