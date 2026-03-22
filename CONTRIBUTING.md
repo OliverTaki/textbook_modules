@@ -1,18 +1,18 @@
 # Contributing
 
-Thank you for your interest. This library exists to give learners and AI systems a clean, free, citable reference for mathematics. Every improvement — no matter how small — makes it more useful for everyone.
+Thank you for your interest. This library exists to give learners and AI systems a clean, free, citable reference for mathematics. Every improvement  Eno matter how small  Emakes it more useful for everyone.
 
 ## What helps most
 
-- **Fix errors** — wrong formulas, unclear explanations, broken LaTeX
-- **Add examples** — more worked examples or practice problems for existing modules
-- **Add modules** — new topics following the schema below
-- **Translate** — modules are written in Japanese first; translations are very welcome
-- **Better sources** — know a high-quality CC-licensed textbook or curriculum doc? Open an issue
+- **Fix errors**  Ewrong formulas, unclear explanations, broken LaTeX
+- **Add examples**  Emore worked examples or practice problems for existing modules
+- **Add modules**  Enew topics following the schema below
+- **Translate**  Emodules are written in Japanese first; translations are very welcome
+- **Better sources**  Eknow a high-quality CC-licensed textbook or curriculum doc? Open an issue
 
 ## Module format
 
-All modules follow [`high-school-math/MODULE_SCHEMA.md`](high-school-math/MODULE_SCHEMA.md).
+All modules follow [`math/MODULE_SCHEMA.md`](math/MODULE_SCHEMA.md).
 
 The key rules:
 - One concept per file

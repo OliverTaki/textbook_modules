@@ -1,94 +1,115 @@
 # textbook_modules
 
-A database of modularized teaching content — organized by concept, openly licensed, built to be reused.
+A database of modularized mathematics teaching content.
+Openly licensed. Concept-first. Structured for reuse.
 
 ---
 
 ## What this is
 
-A structured collection of actual teaching material, broken into self-contained modules.
+A structured collection of complete instructional modules covering mathematics
+from elementary school arithmetic through high school calculus and statistics.
 
-Each module contains real instructional content: explanation, worked examples, practice problems, scoring notes, and problem-generation rules. The goal is a database that can support problem generation, assessment, curriculum mapping, and cultural comparison — but those are downstream uses. The current task is building the content database itself.
+Each module covers one concept and contains:
+- Explanation of the concept
+- Worked examples (minimum 2)
+- Practice problems with answer keys (minimum 3)
+- Problem generation rules
+- Source references with license information
+- Prerequisite and next-module links
 
----
-
-## What a module is
-
-A module is a modularized piece of actual teaching material.
-
-It is not:
-- a concept label
-- an empty knowledge node
-- a metadata stub with thin content
-
-It is a complete unit of instruction covering one concept, with enough content to teach from directly.
+Modules are not stubs. They are complete instructional units a teacher or AI system
+can work from directly.
 
 ---
 
-## Data structure
+## Structure
 
 ```
 math/
-  modules/        ← published modules (primary content)
-  references/     ← source curriculum documents
+  modules/        — published modules (primary content)
+  references/     — verified source reference records per module
   MODULE_SCHEMA.md
+CURRICULUM_SCOPE.md
+CONTRIBUTING.md
+LICENSE
+CHANGELOG.md
 ```
 
-Inside each module, the data hierarchy is:
+---
 
-| Priority | Data | Description |
-|---|---|---|
-| 1 | Teaching content | The module body — explanation, examples |
-| 2 | Source references | Where the content comes from |
-| 3 | Practice problems | Stored problem items with answers |
-| 4 | Problem gen rules | How to generate new problems |
-| 5 | Scoring rules | How answers are evaluated |
-| 6 | Module links | Prerequisites and next modules |
-| 7 | Cultural notes | Country/framing variations |
-| 8 | Wiki notes | Supplementary structured information |
+## Module format
 
-**Modules are primary. All other data is secondary.**
+All modules follow `math/MODULE_SCHEMA.md`.
+
+Each module file is a Markdown document with YAML frontmatter:
+
+```yaml
+---
+module_id: FUNC-002
+title: 二次関数
+level: high
+grade: 10
+license: CC BY 4.0
+source_references:
+  - url: https://example.org/...
+    title: "..."
+    license: CC BY 4.0
+prerequisites:
+  - FUNC-001
+status: reviewed
+---
+```
+
+Source references in the frontmatter point to the corresponding record in
+`math/references/{module_id}/INDEX.md` where full source details are documented.
 
 ---
 
 ## Concept domains
 
 | Prefix | Domain |
-|---|---|
+|--------|--------|
+| `ELM`  | Elementary arithmetic |
+| `MID`  | Middle school mathematics |
+| `ALG`  | Algebra |
 | `FUNC` | Functions |
-| `ALG` | Algebra |
 | `TRIG` | Trigonometry |
 | `CALC` | Calculus |
 | `STAT` | Statistics & Probability |
-| `GEO` | Geometry |
-| `VEC` | Vectors |
-| `LOGIC` | Logic & Proof |
+| `GEO`  | Geometry |
+| `VEC`  | Vectors |
+| `SEQ`  | Sequences |
+| `LOG`  | Logarithms & Exponentials |
+| `COMB` | Combinatorics |
+| `PROB` | Probability |
+| `MATR` | Matrices |
+| `CURV` | Curves & Coordinate Geometry |
 
-Modules are identified by concept domain only — no grade level, no country encoding.
+Modules are identified by concept domain only — no grade-level or country encoding
+in the ID. The same concept appears once, with notes where framing differs across curricula.
 
 ---
 
-## Module status
+## Scope
 
-| Module ID | Concept | Status |
-|---|---|---|
-| FUNC-002 | 二次関数 | reviewed |
-| ALG-001 | 多項式の展開と因数分解 | in progress |
-| FUNC-001 | 関数の概念・定義域・値域 | planned |
-| TRIG-001 | 三角関数の定義 | planned |
-| CALC-001 | 微分の基礎・導関数 | planned |
-| ALG-002 | 方程式と不等式 | planned |
-| GEO-001 | 平面図形の基礎・合同と相似 | planned |
-| CALC-002 | 積分の基礎・面積計算 | planned |
-| VEC-001 | ベクトルの基礎・演算 | planned |
-| STAT-001 | 確率の基礎・事象と確率 | planned |
+The database currently covers elementary school through high school mathematics
+following the Japanese national curriculum (学習指導要領), with curriculum
+comparison notes where relevant.
+
+See `CURRICULUM_SCOPE.md` for the full list of 101 planned modules with prerequisite links.
 
 ---
 
 ## License
 
 All module content is **CC BY 4.0** unless otherwise noted in the module frontmatter.
+Every `source_references` entry must point to a document with an open license (CC BY, CC BY-SA, or CC0).
+
+See `LICENSE` for the full license text.
+
+---
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See `CONTRIBUTING.md`.
