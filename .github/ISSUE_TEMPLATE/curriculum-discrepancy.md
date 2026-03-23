@@ -1,34 +1,34 @@
 ---
-name: カリキュラム差異報告 / Curriculum Discrepancy
-about: 教科書・学習指導要領との差異を発見した場合 / Report a mismatch with curriculum standards
-title: "[CURRICULUM] <module_id>: <概要>"
+name: Curriculum Discrepancy
+about: Report a mismatch between a module and an official curriculum or textbook standard
+title: "[CURRICULUM] <module_id>: <short description>"
 labels: ["curriculum", "needs-review"]
 assignees: []
 ---
 
-## 対象モジュール / Target Module
+## Target Module
 
-- **Module ID**: <!-- 例: B-GEO-001 -->
-- **タイトル / Title**: 
-- **対象カリキュラム / Curriculum**: <!-- 例: 日本 学習指導要領 中学校数学 / IB MYP / Common Core -->
+- **Module ID**: <!-- e.g. B-GEO-001 -->
+- **Title**:
+- **Curriculum**: <!-- e.g. Japan MEXT Course of Study / IB MYP / Common Core -->
 
-## 差異の内容 / Description of Discrepancy
+## Description of Discrepancy
 
-<!-- どの点でカリキュラムと異なっているか説明してください -->
+<!-- Explain how the module content differs from the curriculum standard. -->
 
-## 参照カリキュラム / Reference
+## Reference Document
 
-- **文書名 / Document**:
-- **出版年 / Year**:
-- **該当ページ・章 / Page/Section**:
-- **URL** (任意):
+- **Document name**:
+- **Year**:
+- **Page / Section**:
+- **URL** (optional):
 
-## 提案 / Suggestion
+## Suggested Fix
 
-<!-- 修正案や追記すべき内容があれば記述してください -->
+<!-- Describe the correction or addition needed. -->
 
-## チェックリスト
+## Checklist
 
-- [ ] モジュールIDを確認した
-- [ ] 参照カリキュラム文書を明記した
-- [ ] 既存のIssueと重複していないことを確認した
+- [ ] Confirmed the module ID
+- [ ] Cited the specific curriculum document
+- [ ] Not a duplicate of an existing issue

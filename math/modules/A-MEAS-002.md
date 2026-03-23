@@ -5,7 +5,7 @@ title: 時刻と時間の基礎
 domain: "MEAS"
 concept_tags: [clock, time, time-zone, elapsed-time, calculation]
 prerequisites: []
-next_modules: [ELM-007, MAT-001]
+next_modules: [A-OPS-002]
 source_references:
   - id: SRC-001
     title: "小学校学習指導要領 算数"

@@ -4,8 +4,8 @@ band: "C"
 title: 積分の基礎・面積計算
 domain: "CALC"
 concept_tags: [definite-integral, riemann-sum, area-under-curve, fundamental-theorem]
-prerequisites: [CALC-001]
-next_modules: [CALC-003]
+prerequisites: [C-CALC-001]
+next_modules: [D-CALC-001]
 source_references:
   - id: SRC-CALC-002-01
     title: "微積分入門テキスト"

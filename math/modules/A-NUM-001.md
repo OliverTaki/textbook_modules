@@ -6,7 +6,7 @@ title: 数の概念と数え方（1〜10）
 domain: "NUM"
 concept_tags: [counting, one-to-one-correspondence, numeral, ordering]
 prerequisites: []
-next_modules: [ELM-101, ELM-099]
+next_modules: []
 source_references:
   - id: SRC-001
     title: 文部科学省 学校学習指導要領 第 1 学年 数と計算"

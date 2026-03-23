@@ -4,8 +4,8 @@ band: "A"
 title: 引算の基礎
 domain: "OPS"
 concept_tags: [borrowing, subtraction, elementary_math]
-prerequisites: [ELM-002]
-next_modules: [ELM-004, CALC-001]
+prerequisites: [A-OPS-ADD-001]
+next_modules: [A-NUM-002, C-CALC-001]
 source_references:
   - id: SRC-001
     title: "学習指導要領 算数 (1)"

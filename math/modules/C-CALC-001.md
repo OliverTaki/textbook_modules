@@ -5,8 +5,8 @@ band: "C"
 title: 微分の基礎・導関数
 domain: "CALC"
 concept_tags: [limit-definition, instantaneous-velocity, tangent-slope, power-rule, derivative-notation]
-prerequisites: [ALG-005, FNC-001]
-next_modules: [CALC-002, CALC-003, OPT-001]
+prerequisites: [C-FUNC-001]
+next_modules: [C-CALC-002, D-CALC-001]
 source_references:
   - id: SRC-005
     title: "高等学校数学 II（微分） - 学習指導要領解説"

@@ -4,8 +4,8 @@ band: "C"
 title: 多項式の展開と因数分解
 domain: "ALG"
 concept_tags: [polynomial, expansion, factorization, distributive property, FOIL]
-prerequisites: [ALG-000]
-next_modules: [ALG-002, CALC-001]
+prerequisites: []
+next_modules: [C-CALC-001]
 source_references:
   - id: SRC-001
     title: "数学学習指導要領（高校数学 A・II）"

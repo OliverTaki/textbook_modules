@@ -4,8 +4,8 @@ band: "A"
 title: 10 より大きい数（10〜100 までの数の理解）
 domain: "NUM"
 concept_tags: [ten-place-system, digits, counting-beyond-ten, base-ten-system]
-prerequisites: [ELM-003, NUM-001]
-next_modules: [ELM-005, CALC-002]
+prerequisites: [A-OPS-001, A-NUM-001]
+next_modules: [A-MEAS-001, C-CALC-002]
 source_references:
   - id: SRC-004
     title: "算数・数学教育における 10 以上の数の概念"

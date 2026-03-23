@@ -5,7 +5,7 @@ title: ベクトルの基礎・演算
 domain: "VEC"
 concept_tags: [vector, vector_operations, magnitude, direction, component_form]
 prerequisites: []
-next_modules: [VEC-002, GEOM-001]
+next_modules: [C-VEC-002, B-GEO-001]
 source_references:
   - id: SRC-001
     title: "学習指導要領 高等学校数学A"

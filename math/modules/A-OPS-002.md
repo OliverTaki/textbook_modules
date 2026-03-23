@@ -4,8 +4,8 @@ band: "A"
 title: かけ算・九九
 domain: "OPS"
 concept_tags: [multiplication, times-table, operation, number-sense]
-prerequisites: [ELM-001]
-next_modules: [ALG-001, ELM-008]
+prerequisites: [A-NUM-001]
+next_modules: [C-ALG-001]
 source_references:
   - id: SRC-001
     title: "数学学習指導要領 小学校 2 年生"

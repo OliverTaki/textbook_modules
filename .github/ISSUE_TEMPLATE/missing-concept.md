@@ -1,36 +1,36 @@
 ---
-name: 概念・モジュール不足の提案 / Missing Concept or Module
-about: データベースに不足している概念やモジュールを提案する場合 / Suggest a missing concept or module
-title: "[MISSING] <概念名・トピック>"
+name: Missing Concept or Module
+about: Suggest a concept or module that should be added to the database
+title: "[MISSING] <topic name>"
 labels: ["enhancement", "new-module"]
 assignees: []
 ---
 
-## 提案内容 / Proposed Addition
+## Proposed Addition
 
-- **トピック / Topic**:
-- **対象レベル / Level**: <!-- 例: BAND A（小学校）/ BAND B（中学校）/ BAND C（高校） -->
-- **対象学年 / Grade**: <!-- 例: 小学3年生 / 中学1年生 / 高校2年生 -->
-- **提案ID（案）/ Proposed ID**: <!-- 例: A-OPS-003 -->
+- **Topic**:
+- **Level**: <!-- e.g. BAND A (elementary) / BAND B (middle school) / BAND C (high school) -->
+- **Grade**: <!-- e.g. Grade 3 / Year 7 / Age 15 -->
+- **Proposed ID**: <!-- e.g. A-OPS-003 -->
 
-## 必要性の説明 / Justification
+## Justification
 
-<!-- なぜこの概念・モジュールが必要か説明してください -->
+<!-- Why is this concept or module needed? -->
 
-## 内容の概要 / Content Overview
+## Content Overview
 
-<!-- モジュールに含まれるべき主な概念・セクションを箇条書きで -->
-- 概念説明:
-- 例題:
-- 練習問題:
-- つまずきポイント:
+<!-- List the main concepts and sections the module should cover. -->
+- Concept explanation:
+- Example problems:
+- Practice exercises:
+- Common misconceptions:
 
-## 参考資料 / References
+## References
 
-- 
+-
 
-## チェックリスト
+## Checklist
 
-- [ ] CURRICULUM_SCOPE.md を確認し、既に計画済みでないことを確認した
-- [ ] 既存のIssueと重複していないことを確認した
-- [ ] BANDとDOMAINの案を記載した
+- [ ] Checked CURRICULUM_SCOPE.md — not already planned
+- [ ] Not a duplicate of an existing issue
+- [ ] Included a proposed BAND and DOMAIN

@@ -4,8 +4,8 @@ band: "A"
 title: 長さ・かさ・重さの基礎
 domain: "MEAS"
 concept_tags: [length, volume, mass, density, SI_units, measurement_uncertainty]
-prerequisites: [ELM-001, ELM-002]
-next_modules: [ELM-006, PHS-001]
+prerequisites: [A-NUM-001, A-OPS-ADD-001]
+next_modules: [A-MEAS-002, PHS-001]
 source_references:
   - id: SRC-001
     title: "学習指導要領 中学校理科"

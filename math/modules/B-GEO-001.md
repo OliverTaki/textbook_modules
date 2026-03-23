@@ -5,7 +5,7 @@ title: 平面図形の基礎・合同と相似
 domain: "GEO"
 concept_tags: [congruence, similarity, parallel lines, triangles]
 prerequisites: []
-next_modules: [GEO-002, GEO-003]
+next_modules: [C-NUM-001, C-NUM-002]
 source_references:
   - id: SRC-001
     title: "学習指導要領 中学数学II 平面図形"

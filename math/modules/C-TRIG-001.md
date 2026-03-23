@@ -4,8 +4,8 @@ band: "C"
 title: 三角関数 sin/cos/tan の定義
 domain: "TRIG"
 concept_tags: [right-triangle, ratio, sine, cosine, tangent, special-angles]
-prerequisites: [GEOM-001]
-next_modules: [TRIG-002, CALC-001]
+prerequisites: [B-GEO-001]
+next_modules: [C-TRIG-002, C-CALC-001]
 source_references:
   - id: SRC-TRIG-1
     title: "高校数学の教科書：三角比"

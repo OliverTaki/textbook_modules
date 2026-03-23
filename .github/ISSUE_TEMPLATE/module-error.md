@@ -1,32 +1,32 @@
 ---
-name: モジュール誤り報告 / Module Error Report
-about: 既存モジュールの内容に誤りを見つけた場合 / Report an error in an existing module
-title: "[ERROR] <module_id>: <概要>"
+name: Module Error Report
+about: Report an error or inaccuracy in an existing module
+title: "[ERROR] <module_id>: <short description>"
 labels: ["error", "needs-review"]
 assignees: []
 ---
 
-## 対象モジュール / Target Module
+## Target Module
 
-- **Module ID**: <!-- 例: C-ALG-001 -->
-- **タイトル / Title**: <!-- モジュールのタイトル -->
-- **該当セクション / Section**: <!-- 例: 概念説明、例題、練習問題 -->
+- **Module ID**: <!-- e.g. C-ALG-001 -->
+- **Title**:
+- **Section**: <!-- e.g. concept explanation, example problems, exercises -->
 
-## 誤りの内容 / Description of Error
+## Description of Error
 
-<!-- 何が誤っているか、できるだけ具体的に説明してください -->
+<!-- Describe what is incorrect as specifically as possible. -->
 
-## 正しい内容（案）/ Suggested Correction
+## Suggested Correction
 
-<!-- 正しいと思われる内容を記述してください -->
+<!-- Provide the correct content or approach if you know it. -->
 
-## 参考資料 / References
+## References
 
-<!-- 根拠となる資料・教科書・URLがあれば記載してください -->
-- 
+<!-- Cite any textbook, curriculum document, or URL that supports the correction. -->
+-
 
-## チェックリスト / Checklist
+## Checklist
 
-- [ ] モジュールIDを確認した
-- [ ] 既存のIssueと重複していないことを確認した
-- [ ] 参考資料または根拠を添付した
+- [ ] Confirmed the module ID
+- [ ] Not a duplicate of an existing issue
+- [ ] Included a reference or supporting source
