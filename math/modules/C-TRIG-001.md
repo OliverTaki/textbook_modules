@@ -1,7 +1,8 @@
 ---
-module_id: TRIG-001
+module_id: C-TRIG-001
+band: "C"
 title: 三角関数 sin/cos/tan の定義
-domain: trigonometry
+domain: "TRIG"
 concept_tags: [right-triangle, ratio, sine, cosine, tangent, special-angles]
 prerequisites: [GEOM-001]
 next_modules: [TRIG-002, CALC-001]

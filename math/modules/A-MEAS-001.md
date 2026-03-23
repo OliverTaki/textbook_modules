@@ -1,11 +1,8 @@
-## 長さ・かさ・重さの基礎
-
-raw
-```
 ---
-module_id: ELM-005
+module_id: A-MEAS-001
+band: "A"
 title: 長さ・かさ・重さの基礎
-domain: measurement
+domain: "MEAS"
 concept_tags: [length, volume, mass, density, SI_units, measurement_uncertainty]
 prerequisites: [ELM-001, ELM-002]
 next_modules: [ELM-006, PHS-001]
@@ -20,7 +17,7 @@ source_references:
     license: "CC BY 4.0"
 license: CC BY 4.0
 status: reviewed
-```
+---
 
 ## 概念説明
 

@@ -1,7 +1,8 @@
 ---
-module_id: VEC-001
+module_id: C-VEC-001
+band: "C"
 title: ベクトルの基礎・演算
-domain: algebra
+domain: "VEC"
 concept_tags: [vector, vector_operations, magnitude, direction, component_form]
 prerequisites: []
 next_modules: [VEC-002, GEOM-001]

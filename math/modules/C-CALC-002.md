@@ -1,7 +1,8 @@
 ---
-module_id: CALC-002
+module_id: C-CALC-002
+band: "C"
 title: 積分の基礎・面積計算
-domain: calculus
+domain: "CALC"
 concept_tags: [definite-integral, riemann-sum, area-under-curve, fundamental-theorem]
 prerequisites: [CALC-001]
 next_modules: [CALC-003]

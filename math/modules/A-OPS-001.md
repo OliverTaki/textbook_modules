@@ -1,7 +1,8 @@
 ---
-module_id: ELM-003
+module_id: A-OPS-001
+band: "A"
 title: 引算の基礎
-domain: arithmetic
+domain: "OPS"
 concept_tags: [borrowing, subtraction, elementary_math]
 prerequisites: [ELM-002]
 next_modules: [ELM-004, CALC-001]

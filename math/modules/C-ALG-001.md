@@ -1,7 +1,8 @@
 ---
-module_id: ALG-001
+module_id: C-ALG-001
+band: "C"
 title: 多項式の展開と因数分解
-domain: algebra
+domain: "ALG"
 concept_tags: [polynomial, expansion, factorization, distributive property, FOIL]
 prerequisites: [ALG-000]
 next_modules: [ALG-002, CALC-001]

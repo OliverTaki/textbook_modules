@@ -1,7 +1,8 @@
 ---
-module_id: ELM-004
+module_id: A-NUM-002
+band: "A"
 title: 10 より大きい数（10〜100 までの数の理解）
-domain: algebra
+domain: "NUM"
 concept_tags: [ten-place-system, digits, counting-beyond-ten, base-ten-system]
 prerequisites: [ELM-003, NUM-001]
 next_modules: [ELM-005, CALC-002]

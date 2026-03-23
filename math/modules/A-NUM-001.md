@@ -1,8 +1,9 @@
 ---
 
-module_id: ELM-001
+module_id: A-NUM-001
+band: "A"
 title: 数の概念と数え方（1〜10）
-domain: number
+domain: "NUM"
 concept_tags: [counting, one-to-one-correspondence, numeral, ordering]
 prerequisites: []
 next_modules: [ELM-101, ELM-099]

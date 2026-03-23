@@ -1,8 +1,9 @@
 ---
 
-module_id: CALC-001
+module_id: C-CALC-001
+band: "C"
 title: 微分の基礎・導関数
-domain: calculus
+domain: "CALC"
 concept_tags: [limit-definition, instantaneous-velocity, tangent-slope, power-rule, derivative-notation]
 prerequisites: [ALG-005, FNC-001]
 next_modules: [CALC-002, CALC-003, OPT-001]

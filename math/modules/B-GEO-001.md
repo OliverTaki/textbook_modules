@@ -1,8 +1,8 @@
-```yaml
 ---
-module_id: GEO-001
+module_id: B-GEO-001
+band: "B"
 title: 平面図形の基礎・合同と相似
-domain: geometry
+domain: "GEO"
 concept_tags: [congruence, similarity, parallel lines, triangles]
 prerequisites: []
 next_modules: [GEO-002, GEO-003]
@@ -32,7 +32,6 @@ status: reviewed
 **問題:** △ABC ≡ △DEF を証明し、BC の長さを求めなさい。
 
 [条件]
-```
 点 A, B, C の座標：A(1, 0), B(0, 3), C(4, 0)
 点 D, E, F の座標：D(2, 1), E(1, 4), F(π, 1)
 ```

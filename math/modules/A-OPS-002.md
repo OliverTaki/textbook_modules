@@ -1,7 +1,8 @@
 ---
-module_id: ELM-007
+module_id: A-OPS-002
+band: "A"
 title: かけ算・九九
-domain: number
+domain: "OPS"
 concept_tags: [multiplication, times-table, operation, number-sense]
 prerequisites: [ELM-001]
 next_modules: [ALG-001, ELM-008]

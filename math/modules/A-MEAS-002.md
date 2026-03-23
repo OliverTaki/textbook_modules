@@ -1,7 +1,8 @@
 ---
-module_id: ELM-006
+module_id: A-MEAS-002
+band: "A"
 title: 時刻と時間の基礎
-domain: measurement
+domain: "MEAS"
 concept_tags: [clock, time, time-zone, elapsed-time, calculation]
 prerequisites: []
 next_modules: [ELM-007, MAT-001]
