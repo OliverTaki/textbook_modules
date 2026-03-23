@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 使い方・スキーマ仕様
+    url: https://github.com/dicekaydaisuke/KnowledgeMapProject/blob/main/math/MODULE_SCHEMA.md
+    about: モジュールのフォーマット仕様（MODULE_SCHEMA.md）を確認する
+  - name: 📋 収録スコープ一覧
+    url: https://github.com/dicekaydaisuke/KnowledgeMapProject/blob/main/CURRICULUM_SCOPE.md
+    about: 収録予定モジュールの一覧（CURRICULUM_SCOPE.md）を確認する
