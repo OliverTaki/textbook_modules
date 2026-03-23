@@ -28,3 +28,10 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+SYSTEM_STATE.md 
+TASK_QUEUE.md 
+HOLD_QUEUE.md 
+RUN_LOG.md 
+ERROR_LOG.md 
+logs/ 
+*_draft.md 
