@@ -1,25 +1,34 @@
 # textbook_modules
 
-A database of modularized mathematics teaching content.
-Openly licensed. Concept-first. Structured for reuse.
+An open database of modular instructional knowledge, designed for AI systems.
+
+Openly licensed. Concept-first. Structured for reuse across subjects and curricula.
 
 ---
 
 ## What this is
 
-A structured collection of complete instructional modules covering mathematics
-from elementary school arithmetic through high school calculus and statistics.
+`textbook_modules` is an **AI-readable instructional knowledge database**.
 
-Each module covers one concept and contains:
-- Explanation of the concept
-- Worked examples (minimum 2)
-- Practice problems with answer keys (minimum 3)
-- Problem generation rules
-- Source references with license information
-- Prerequisite and next-module links
+This is not a student-facing textbook and not a finished learning app.
+It is a structured collection of knowledge objects that AI systems can use to:
+- Generate explanations and worked examples
+- Create and score practice problems
+- Compare concepts across curricula and cultures
+- Sequence learning pathways via prerequisite graphs
+- Translate and localize instructional content
 
-Modules are not stubs. They are complete instructional units a teacher or AI system
-can work from directly.
+Each module is one concept — complete enough to be useful, structured enough to be processed.
+
+---
+
+## Scope
+
+**Current subject: `math/`** — elementary through high school mathematics.
+
+This repository is designed for cross-subject expansion.
+Future subjects may include physics, chemistry, history, language, and others.
+Each subject gets its own directory. The structure and schema principles are shared.
 
 ---
 
@@ -27,13 +36,13 @@ can work from directly.
 
 ```
 math/
-  modules/        — published modules (primary content)
-  references/     — verified source reference records per module
+  modules/         published modules
+  references/      verified source reference records per module
   MODULE_SCHEMA.md
 CURRICULUM_SCOPE.md
 CONTRIBUTING.md
-LICENSE
 CHANGELOG.md
+LICENSE
 ```
 
 ---
@@ -42,62 +51,50 @@ CHANGELOG.md
 
 All modules follow `math/MODULE_SCHEMA.md`.
 
-Each module file is a Markdown document with YAML frontmatter:
+YAML frontmatter + structured Markdown body. The body is the primary object.
 
-```yaml
+Current modules are written in **Japanese** (the primary working language).
+English is the planned canonical language for future modules.
+Locale-specific framing (grade placement, curriculum terminology) is kept
+in a separate section and not mixed into the core concept explanation.
+
 ---
-module_id: FUNC-002
-title: 二次関数
-level: high
-grade: 10
-license: CC BY 4.0
-source_references:
-  - url: https://example.org/...
-    title: "..."
-    license: CC BY 4.0
-prerequisites:
-  - FUNC-001
-status: reviewed
----
+
+## ID format
+
+Current modules use a legacy format (`ELM-001`, `FUNC-002`, etc.).
+
+Modules are being migrated to:
+
+```
+{BAND}-{DOMAIN}-{NNN}
 ```
 
-Source references in the frontmatter point to the corresponding record in
-`math/references/{module_id}/INDEX.md` where full source details are documented.
+| BAND | Level |
+|------|-------|
+| A | Elementary |
+| B | Middle school |
+| C | High school |
+| D | University introductory |
+| E | University advanced |
+
+Domain examples for math: `NUM`, `MEAS`, `ALG`, `FUNC`, `GEO`, `STAT`, `CALC`
+
+Subject is identified by directory (`math/`, `physics/`...), not by ID prefix.
 
 ---
 
-## Concept domains
+## Feedback and contributions
 
-| Prefix | Domain |
-|--------|--------|
-| `ELM`  | Elementary arithmetic |
-| `MID`  | Middle school mathematics |
-| `ALG`  | Algebra |
-| `FUNC` | Functions |
-| `TRIG` | Trigonometry |
-| `CALC` | Calculus |
-| `STAT` | Statistics & Probability |
-| `GEO`  | Geometry |
-| `VEC`  | Vectors |
-| `SEQ`  | Sequences |
-| `LOG`  | Logarithms & Exponentials |
-| `COMB` | Combinatorics |
-| `PROB` | Probability |
-| `MATR` | Matrices |
-| `CURV` | Curves & Coordinate Geometry |
+External feedback is welcome via **GitHub Issues**.
 
-Modules are identified by concept domain only — no grade-level or country encoding
-in the ID. The same concept appears once, with notes where framing differs across curricula.
+If you find a factual error, a missing concept, a curriculum discrepancy,
+or a structural problem in any module, please open an issue.
 
----
+Issues are reviewed and triaged before being incorporated.
+Not all feedback will be accepted as-is — editorial judgment is applied.
 
-## Scope
-
-The database currently covers elementary school through high school mathematics
-following the Japanese national curriculum (学習指導要領), with curriculum
-comparison notes where relevant.
-
-See `CURRICULUM_SCOPE.md` for the full list of 101 planned modules with prerequisite links.
+For contribution guidelines, see `CONTRIBUTING.md`.
 
 ---
 
@@ -107,9 +104,3 @@ All module content is **CC BY 4.0** unless otherwise noted in the module frontma
 Every `source_references` entry must point to a document with an open license (CC BY, CC BY-SA, or CC0).
 
 See `LICENSE` for the full license text.
-
----
-
-## Contributing
-
-See `CONTRIBUTING.md`.
