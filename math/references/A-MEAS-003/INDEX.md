@@ -4,7 +4,7 @@
 
 | ID | タイトル | URL | Tier | ライセンス | 文字数 |
 |----|---------|----|----|-----------|-------|
-| SRC-01 | measurements | https://www.khanacademy.org/math/cc-5th-grade-geometry/cc-5t | T1 | see source | 0 |
+| SRC-01 | rate problems | https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th- | T1 | see source | 0 |
 | SRC-02 | area.html | https://www.mathsisfun.com/area.html | T1 | see source | 1627 |
 | SRC-03 | prealgebra 2e | https://openstax.org/books/prealgebra-2e | T1 | see source | 0 |
 | SRC-04 | 01%3A Area and Surface Area | https://math.libretexts.org/Bookshelves/Arithmetic_and_Basic | T1 | see source | 5000 |
